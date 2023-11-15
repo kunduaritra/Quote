@@ -1,14 +1,11 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link, Route } from "react-router-dom";
+import Comments from "./Comments";
 
 const QuotesDetails = (props) => {
   const params = useParams();
   let quote;
-  try {
-    quote = props.quoteList.find((q) => q.id === params.quotesId);
-  } catch (err) {
-    return <p>Errorrrrrrrrrr</p>;
-  }
+  quote = props.quoteList.find((q) => q.id === params.quotesId);
 
   return (
     <div className="container mt-5">
@@ -22,6 +19,19 @@ const QuotesDetails = (props) => {
               </p>
             </div>
           </div>
+          <div className="text-center mt-5">
+            <Route path={`/quotes/${params.quotesId}`} exact>
+              <Link
+                to={`/quotes/${params.quotesId}/comments`}
+                style={{ textDecoration: "none" }}
+              >
+                Load Comments
+              </Link>
+            </Route>
+          </div>
+          <Route path={`/quotes/${params.quotesId}/comments`}>
+            <Comments />
+          </Route>
         </div>
       </div>
     </div>
