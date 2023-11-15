@@ -1,12 +1,37 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
+
+const sortQuotes = (quotes, ascending) => {
+  return quotes.sort((quoteA, quoteB) => {
+    if (ascending) {
+      return quoteA.id > quoteB.id ? 1 : -1;
+    } else {
+      return quoteA.id < quoteB.id ? 1 : -1;
+    }
+  });
+};
 
 const AllQuotes = (props) => {
+  const history = useHistory();
+  const location = useLocation();
+
+  const queryParams = new URLSearchParams(location.search);
+  const isShortingAscending = queryParams.get("sort") === "asc";
+
+  const sortedQuotes = sortQuotes(props.quoteList, isShortingAscending);
+
+  const changeSortingHandler = () => {
+    history.push("/quotes?sort=" + (isShortingAscending ? "desc" : "asc"));
+  };
   return (
     <div className="container mx-auto mt-3">
       <h1 className="text-center">All Quotes</h1>
       <ul>
-        {props.quoteList.map((q) => (
+        <button className="btn btn-info mb-3" onClick={changeSortingHandler}>
+          Sort {isShortingAscending ? "Descending" : "Ascending"}
+        </button>
+        <hr />
+        {sortedQuotes.map((q) => (
           <li key={q.id} style={{ listStyle: "none" }}>
             <div className="card mb-3">
               <div className="card-header">
